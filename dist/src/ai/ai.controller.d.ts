@@ -4,14 +4,6 @@ export declare class AiController {
     constructor(aiService: AiService);
     extractNotes(body: {
         transcript: string;
-    }): Promise<{
-        taskId: string;
-    } | {
-        error: string;
-    }>;
-    getExtractionStatus(taskId: string): Promise<{
-        status: "processing" | "done" | "error";
-        result?: any;
-        error?: string;
-    }>;
+    }): Promise<any>;
+    getExtractionStatus(taskId: string): Promise<any>;
 }

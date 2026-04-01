@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,14 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthController = void 0;
-const common_1 = require("@nestjs/common");
-const auth_service_1 = require("./auth.service");
-const passport_1 = require("@nestjs/passport");
-const roles_guard_1 = require("./roles.guard");
-const roles_decorator_1 = require("./roles.decorator");
-const client_1 = require("@prisma/client");
+var _a;
+import { Controller, Post, Body, HttpCode, HttpStatus, UnauthorizedException, Get, UseGuards, Request } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from './roles.guard';
+import { Roles } from './roles.decorator';
+import { Role } from '@prisma/client';
 let AuthController = class AuthController {
     authService;
     constructor(authService) {
@@ -27,7 +25,7 @@ let AuthController = class AuthController {
     async login(body) {
         const user = await this.authService.validateUser(body.email, body.password);
         if (!user) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+            throw new UnauthorizedException('Invalid credentials');
         }
         return this.authService.login(user);
     }
@@ -38,33 +36,33 @@ let AuthController = class AuthController {
         return req.user;
     }
 };
-exports.AuthController = AuthController;
 __decorate([
-    (0, common_1.Post)('login'),
-    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Body)()),
+    Post('login'),
+    HttpCode(HttpStatus.OK),
+    __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
-    (0, common_1.Post)('register'),
-    __param(0, (0, common_1.Body)()),
+    Post('register'),
+    __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "register", null);
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ADMIN),
-    (0, common_1.Get)('profile'),
-    __param(0, (0, common_1.Request)()),
+    UseGuards(AuthGuard('jwt'), RolesGuard),
+    Roles(Role.DENTIST, Role.ADMIN),
+    Get('profile'),
+    __param(0, Request()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getProfile", null);
-exports.AuthController = AuthController = __decorate([
-    (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+AuthController = __decorate([
+    Controller('auth'),
+    __metadata("design:paramtypes", [typeof (_a = typeof AuthService !== "undefined" && AuthService) === "function" ? _a : Object])
 ], AuthController);
+export { AuthController };
 //# sourceMappingURL=auth.controller.js.map
