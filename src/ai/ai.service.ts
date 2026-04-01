@@ -32,6 +32,9 @@ export class AiService {
   private async processAi(taskId: string, transcript: string) {
     try {
       const apiKey = process.env.OPENROUTER_API_KEY;
+      if (!apiKey) {
+        throw new Error("OPENROUTER_API_KEY is missing in Vercel environment variables.");
+      }
       
       const prompt = `You are a strict clinical AI assistant processing dictated voice notes. Analyze this transcript and return ONLY raw JSON. Do not include markdown formatting or conversational text.
 Ensure the JSON has exactly these 4 keys:
