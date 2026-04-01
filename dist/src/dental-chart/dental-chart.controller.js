@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,13 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
-import { Controller, Get, Param, Put, Body, UseGuards } from '@nestjs/common';
-import { DentalChartService } from './dental-chart.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { Role } from '@prisma/client';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DentalChartController = void 0;
+const common_1 = require("@nestjs/common");
+const dental_chart_service_1 = require("./dental-chart.service");
+const passport_1 = require("@nestjs/passport");
+const roles_guard_1 = require("../auth/roles.guard");
+const roles_decorator_1 = require("../auth/roles.decorator");
+const client_1 = require("@prisma/client");
 let DentalChartController = class DentalChartController {
     dentalChartService;
     constructor(dentalChartService) {
@@ -29,28 +31,28 @@ let DentalChartController = class DentalChartController {
         return this.dentalChartService.updateTooth(patientId, parseInt(toothNumber, 10), data);
     }
 };
+exports.DentalChartController = DentalChartController;
 __decorate([
-    Roles(Role.DENTIST, Role.ASSISTANT, Role.PATIENT),
-    Get(':patientId'),
-    __param(0, Param('patientId')),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.PATIENT),
+    (0, common_1.Get)(':patientId'),
+    __param(0, (0, common_1.Param)('patientId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], DentalChartController.prototype, "getPatientChart", null);
 __decorate([
-    Roles(Role.DENTIST),
-    Put(':patientId/tooth/:toothNumber'),
-    __param(0, Param('patientId')),
-    __param(1, Param('toothNumber')),
-    __param(2, Body()),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST),
+    (0, common_1.Put)(':patientId/tooth/:toothNumber'),
+    __param(0, (0, common_1.Param)('patientId')),
+    __param(1, (0, common_1.Param)('toothNumber')),
+    __param(2, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, Object]),
     __metadata("design:returntype", void 0)
 ], DentalChartController.prototype, "updateTooth", null);
-DentalChartController = __decorate([
-    UseGuards(AuthGuard('jwt'), RolesGuard),
-    Controller('dental-chart'),
-    __metadata("design:paramtypes", [typeof (_a = typeof DentalChartService !== "undefined" && DentalChartService) === "function" ? _a : Object])
+exports.DentalChartController = DentalChartController = __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
+    (0, common_1.Controller)('dental-chart'),
+    __metadata("design:paramtypes", [dental_chart_service_1.DentalChartService])
 ], DentalChartController);
-export { DentalChartController };
 //# sourceMappingURL=dental-chart.controller.js.map

@@ -1,16 +1,19 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { randomUUID } from 'crypto';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AiService = void 0;
+const common_1 = require("@nestjs/common");
+const crypto_1 = require("crypto");
 let AiService = class AiService {
     ollamaUrl = 'http://127.0.0.1:11434';
     tasks = new Map();
     async startExtraction(transcript) {
-        const taskId = randomUUID();
+        const taskId = (0, crypto_1.randomUUID)();
         this.tasks.set(taskId, { status: 'processing' });
         this.processOllama(taskId, transcript).catch(err => {
             console.error("Background AI Error:", err);
@@ -21,7 +24,7 @@ let AiService = class AiService {
     getExtractionStatus(taskId) {
         const task = this.tasks.get(taskId);
         if (!task) {
-            throw new HttpException('Task not found or expired', HttpStatus.NOT_FOUND);
+            throw new common_1.HttpException('Task not found or expired', common_1.HttpStatus.NOT_FOUND);
         }
         return task;
     }
@@ -73,8 +76,8 @@ Transcript to analyze: "${transcript}"`;
         }
     }
 };
-AiService = __decorate([
-    Injectable()
+exports.AiService = AiService;
+exports.AiService = AiService = __decorate([
+    (0, common_1.Injectable)()
 ], AiService);
-export { AiService };
 //# sourceMappingURL=ai.service.js.map

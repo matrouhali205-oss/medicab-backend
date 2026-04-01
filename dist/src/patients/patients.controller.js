@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -10,13 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
-import { Controller, Get, Post, Body, Param, Put, UseGuards } from '@nestjs/common';
-import { PatientsService } from './patients.service';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
-import { Role } from '@prisma/client';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PatientsController = void 0;
+const common_1 = require("@nestjs/common");
+const patients_service_1 = require("./patients.service");
+const passport_1 = require("@nestjs/passport");
+const roles_guard_1 = require("../auth/roles.guard");
+const roles_decorator_1 = require("../auth/roles.decorator");
+const client_1 = require("@prisma/client");
 let PatientsController = class PatientsController {
     patientsService;
     constructor(patientsService) {
@@ -35,42 +37,42 @@ let PatientsController = class PatientsController {
         return this.patientsService.update(id, data);
     }
 };
+exports.PatientsController = PatientsController;
 __decorate([
-    Roles(Role.DENTIST, Role.ASSISTANT, Role.ADMIN),
-    Post(),
-    __param(0, Body()),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.ADMIN),
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], PatientsController.prototype, "create", null);
 __decorate([
-    Roles(Role.DENTIST, Role.ASSISTANT, Role.ADMIN),
-    Get(),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.ADMIN),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], PatientsController.prototype, "findAll", null);
 __decorate([
-    Roles(Role.DENTIST, Role.ASSISTANT, Role.PATIENT, Role.ADMIN),
-    Get(':id'),
-    __param(0, Param('id')),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.PATIENT, client_1.Role.ADMIN),
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], PatientsController.prototype, "findOne", null);
 __decorate([
-    Roles(Role.DENTIST, Role.ASSISTANT, Role.ADMIN),
-    Put(':id'),
-    __param(0, Param('id')),
-    __param(1, Body()),
+    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.ADMIN),
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], PatientsController.prototype, "update", null);
-PatientsController = __decorate([
-    UseGuards(AuthGuard('jwt'), RolesGuard),
-    Controller('patients'),
-    __metadata("design:paramtypes", [typeof (_a = typeof PatientsService !== "undefined" && PatientsService) === "function" ? _a : Object])
+exports.PatientsController = PatientsController = __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
+    (0, common_1.Controller)('patients'),
+    __metadata("design:paramtypes", [patients_service_1.PatientsService])
 ], PatientsController);
-export { PatientsController };
 //# sourceMappingURL=patients.controller.js.map
