@@ -3,17 +3,17 @@ import { randomUUID } from 'crypto';
 
 @Injectable()
 export class AiService {
-  private ollamaUrl = 'http://127.0.0.1:11434';
+  private openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
   
-  // In-memory store for active extraction jobs to prevent Cloud API Timeouts
+  // In-memory store for active extraction jobs
   private tasks = new Map<string, { status: 'processing' | 'done' | 'error', result?: any, error?: string }>();
 
   async startExtraction(transcript: string): Promise<{ taskId: string }> {
     const taskId = randomUUID();
     this.tasks.set(taskId, { status: 'processing' });
     
-    // Fire and forget (runs asynchronously in the Node Event Loop background)
-    this.processOllama(taskId, transcript).catch(err => {
+    // Background execution
+    this.processAi(taskId, transcript).catch(err => {
       console.error("Background AI Error:", err);
       this.tasks.set(taskId, { status: 'error', error: err.message });
     });
@@ -29,24 +29,10 @@ export class AiService {
     return task;
   }
 
-  private async processOllama(taskId: string, transcript: string) {
+  private async processAi(taskId: string, transcript: string) {
     try {
-      // 1. Determine local default model
-      let modelName = 'llama3';
-      try {
-        const tagsRes = await fetch(`${this.ollamaUrl}/api/tags`);
-        if (!tagsRes.ok) throw new Error('Ollama connection failed');
-        const tagsData = await tagsRes.json();
-        if (tagsData.models && tagsData.models.length > 0) {
-          modelName = tagsData.models[0].name; 
-        } else {
-          throw new Error('No AI models downloaded in Ollama. Please run "ollama run llama3"');
-        }
-      } catch (e) {
-        throw new Error('Ollama is not running locally. Please open the Ollama application on your Mac.');
-      }
-
-      // 2. Generate Structured Data
+      const apiKey = process.env.OPENROUTER_API_KEY || "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";
+      
       const prompt = `You are a strict clinical AI assistant processing dictated voice notes. Analyze this transcript and return ONLY raw JSON. Do not include markdown formatting or conversational text.
 Ensure the JSON has exactly these 4 keys:
 "symptoms": (array of strings, concisely listing reported symptoms),
@@ -56,28 +42,33 @@ Ensure the JSON has exactly these 4 keys:
 
 Transcript to analyze: "${transcript}"`;
 
-      const response = await fetch(`${this.ollamaUrl}/api/generate`, {
+      const response = await fetch(this.openRouterUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
         body: JSON.stringify({
-          model: modelName,
-          prompt,
-          stream: false,
-          format: 'json'
+          model: "qwen/qwen-2.5-72b-instruct",
+          messages: [{ role: "user", content: prompt }],
+          response_format: { type: "json_object" }
         })
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to generate from Ollama: ${response.statusText}`);
+        const errText = await response.text();
+        throw new Error(`OpenRouter API failed: ${errText}`);
       }
 
       const resData = await response.json();
-      const parsedJSON = JSON.parse(resData.response); // Parse string to JS Object
+      const content = resData.choices[0].message.content;
+      const parsedJSON = JSON.parse(content);
       
       this.tasks.set(taskId, { status: 'done', result: parsedJSON });
 
     } catch (err: any) {
-      this.tasks.set(taskId, { status: 'error', error: err.message || 'Ollama Network Crash' });
+      console.error("Extraction Logic Error:", err);
+      this.tasks.set(taskId, { status: 'error', error: err.message || 'AI Cloud Processing Error' });
     }
   }
 }

@@ -1,5 +1,5 @@
 export declare class AiService {
-    private ollamaUrl;
+    private openRouterUrl;
     private tasks;
     startExtraction(transcript: string): Promise<{
         taskId: string;
@@ -9,5 +9,5 @@ export declare class AiService {
         result?: any;
         error?: string;
     };
-    private processOllama;
+    private processAi;
 }
