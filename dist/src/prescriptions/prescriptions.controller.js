@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { PrescriptionsService } from './prescriptions.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -48,7 +47,7 @@ __decorate([
 PrescriptionsController = __decorate([
     UseGuards(AuthGuard('jwt'), RolesGuard),
     Controller('prescriptions'),
-    __metadata("design:paramtypes", [typeof (_a = typeof PrescriptionsService !== "undefined" && PrescriptionsService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [PrescriptionsService])
 ], PrescriptionsController);
 export { PrescriptionsController };
 //# sourceMappingURL=prescriptions.controller.js.map

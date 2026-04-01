@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
 import { AiService } from './ai.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -51,7 +50,7 @@ __decorate([
 AiController = __decorate([
     Controller('ai'),
     UseGuards(AuthGuard('jwt'), RolesGuard),
-    __metadata("design:paramtypes", [typeof (_a = typeof AiService !== "undefined" && AiService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [AiService])
 ], AiController);
 export { AiController };
 //# sourceMappingURL=ai.controller.js.map

@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -32,7 +31,7 @@ let JwtStrategy = class JwtStrategy extends PassportStrategy(Strategy) {
 };
 JwtStrategy = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [typeof (_a = typeof UsersService !== "undefined" && UsersService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [UsersService])
 ], JwtStrategy);
 export { JwtStrategy };
 //# sourceMappingURL=jwt.strategy.js.map

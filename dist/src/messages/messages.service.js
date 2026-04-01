@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 let MessagesService = class MessagesService {
@@ -39,7 +38,7 @@ let MessagesService = class MessagesService {
 };
 MessagesService = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [typeof (_a = typeof PrismaService !== "undefined" && PrismaService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [PrismaService])
 ], MessagesService);
 export { MessagesService };
 //# sourceMappingURL=messages.service.js.map

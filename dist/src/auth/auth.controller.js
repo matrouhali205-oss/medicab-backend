@@ -10,7 +10,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var _a;
 import { Controller, Post, Body, HttpCode, HttpStatus, UnauthorizedException, Get, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -62,7 +61,7 @@ __decorate([
 ], AuthController.prototype, "getProfile", null);
 AuthController = __decorate([
     Controller('auth'),
-    __metadata("design:paramtypes", [typeof (_a = typeof AuthService !== "undefined" && AuthService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [AuthService])
 ], AuthController);
 export { AuthController };
 //# sourceMappingURL=auth.controller.js.map

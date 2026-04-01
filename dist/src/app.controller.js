@@ -7,7 +7,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 let AppController = class AppController {
@@ -27,7 +26,7 @@ __decorate([
 ], AppController.prototype, "getHello", null);
 AppController = __decorate([
     Controller(),
-    __metadata("design:paramtypes", [typeof (_a = typeof AppService !== "undefined" && AppService) === "function" ? _a : Object])
+    __metadata("design:paramtypes", [AppService])
 ], AppController);
 export { AppController };
 //# sourceMappingURL=app.controller.js.map
