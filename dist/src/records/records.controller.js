@@ -1,4 +1,3 @@
-"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -11,14 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecordsController = void 0;
-const common_1 = require("@nestjs/common");
-const records_service_1 = require("./records.service");
-const passport_1 = require("@nestjs/passport");
-const roles_guard_1 = require("../auth/roles.guard");
-const roles_decorator_1 = require("../auth/roles.decorator");
-const client_1 = require("@prisma/client");
+var _a;
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { RecordsService } from './records.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { Role } from '@prisma/client';
 let RecordsController = class RecordsController {
     recordsService;
     constructor(recordsService) {
@@ -31,26 +29,26 @@ let RecordsController = class RecordsController {
         return this.recordsService.findByPatient(patientId);
     }
 };
-exports.RecordsController = RecordsController;
 __decorate([
-    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT),
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)()),
+    Roles(Role.DENTIST, Role.ASSISTANT),
+    Post(),
+    __param(0, Body()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], RecordsController.prototype, "create", null);
 __decorate([
-    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST, client_1.Role.ASSISTANT, client_1.Role.PATIENT),
-    (0, common_1.Get)('patient/:patientId'),
-    __param(0, (0, common_1.Param)('patientId')),
+    Roles(Role.DENTIST, Role.ASSISTANT, Role.PATIENT),
+    Get('patient/:patientId'),
+    __param(0, Param('patientId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], RecordsController.prototype, "findByPatient", null);
-exports.RecordsController = RecordsController = __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
-    (0, common_1.Controller)('records'),
-    __metadata("design:paramtypes", [records_service_1.RecordsService])
+RecordsController = __decorate([
+    UseGuards(AuthGuard('jwt'), RolesGuard),
+    Controller('records'),
+    __metadata("design:paramtypes", [typeof (_a = typeof RecordsService !== "undefined" && RecordsService) === "function" ? _a : Object])
 ], RecordsController);
+export { RecordsController };
 //# sourceMappingURL=records.controller.js.map
