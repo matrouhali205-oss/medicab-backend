@@ -8,27 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AiService = void 0;
 const common_1 = require("@nestjs/common");
-const crypto_1 = require("crypto");
 let AiService = class AiService {
     openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
-    tasks = new Map();
-    async startExtraction(transcript) {
-        const taskId = (0, crypto_1.randomUUID)();
-        this.tasks.set(taskId, { status: 'processing' });
-        this.processAi(taskId, transcript).catch(err => {
-            console.error("Background AI Error:", err);
-            this.tasks.set(taskId, { status: 'error', error: err.message });
-        });
-        return { taskId };
-    }
-    getExtractionStatus(taskId) {
-        const task = this.tasks.get(taskId);
-        if (!task) {
-            throw new common_1.HttpException('Task not found or expired', common_1.HttpStatus.NOT_FOUND);
-        }
-        return task;
-    }
-    async processAi(taskId, transcript) {
+    async extractNotes(transcript) {
         try {
             const apiKey = process.env.OPENROUTER_API_KEY;
             if (!apiKey) {
@@ -61,11 +43,11 @@ Transcript to analyze: "${transcript}"`;
             const resData = await response.json();
             const content = resData.choices[0].message.content;
             const parsedJSON = JSON.parse(content);
-            this.tasks.set(taskId, { status: 'done', result: parsedJSON });
+            return { status: 'done', result: parsedJSON };
         }
         catch (err) {
             console.error("Extraction Logic Error:", err);
-            this.tasks.set(taskId, { status: 'error', error: err.message || 'AI Cloud Processing Error' });
+            throw new common_1.HttpException(err.message || 'AI Cloud Processing Error', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 };

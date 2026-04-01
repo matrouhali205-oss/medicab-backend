@@ -5,13 +5,9 @@ export declare class AiController {
     extractNotes(body: {
         transcript: string;
     }): Promise<{
-        taskId: string;
+        status: string;
+        result: any;
     } | {
         error: string;
-    }>;
-    getExtractionStatus(taskId: string): Promise<{
-        status: "processing" | "done" | "error";
-        result?: any;
-        error?: string;
     }>;
 }

@@ -16,12 +16,6 @@ export class AiController {
     if (!body.transcript) {
       return { error: 'No transcript provided' };
     }
-    return this.aiService.startExtraction(body.transcript);
-  }
-
-  @Get('extract/:taskId')
-  @Roles(Role.DENTIST)
-  async getExtractionStatus(@Param('taskId') taskId: string) {
-    return this.aiService.getExtractionStatus(taskId);
+    return this.aiService.extractNotes(body.transcript);
   }
 }

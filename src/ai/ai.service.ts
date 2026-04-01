@@ -4,32 +4,8 @@ import { randomUUID } from 'crypto';
 @Injectable()
 export class AiService {
   private openRouterUrl = 'https://openrouter.ai/api/v1/chat/completions';
-  
-  // In-memory store for active extraction jobs
-  private tasks = new Map<string, { status: 'processing' | 'done' | 'error', result?: any, error?: string }>();
 
-  async startExtraction(transcript: string): Promise<{ taskId: string }> {
-    const taskId = randomUUID();
-    this.tasks.set(taskId, { status: 'processing' });
-    
-    // Background execution
-    this.processAi(taskId, transcript).catch(err => {
-      console.error("Background AI Error:", err);
-      this.tasks.set(taskId, { status: 'error', error: err.message });
-    });
-
-    return { taskId };
-  }
-
-  getExtractionStatus(taskId: string) {
-    const task = this.tasks.get(taskId);
-    if (!task) {
-      throw new HttpException('Task not found or expired', HttpStatus.NOT_FOUND);
-    }
-    return task;
-  }
-
-  private async processAi(taskId: string, transcript: string) {
+  async extractNotes(transcript: string): Promise<{ status: string, result: any }> {
     try {
       const apiKey = process.env.OPENROUTER_API_KEY;
       if (!apiKey) {
@@ -67,11 +43,11 @@ Transcript to analyze: "${transcript}"`;
       const content = resData.choices[0].message.content;
       const parsedJSON = JSON.parse(content);
       
-      this.tasks.set(taskId, { status: 'done', result: parsedJSON });
+      return { status: 'done', result: parsedJSON };
 
     } catch (err: any) {
       console.error("Extraction Logic Error:", err);
-      this.tasks.set(taskId, { status: 'error', error: err.message || 'AI Cloud Processing Error' });
+      throw new HttpException(err.message || 'AI Cloud Processing Error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

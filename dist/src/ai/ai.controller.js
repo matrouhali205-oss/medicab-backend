@@ -28,10 +28,7 @@ let AiController = class AiController {
         if (!body.transcript) {
             return { error: 'No transcript provided' };
         }
-        return this.aiService.startExtraction(body.transcript);
-    }
-    async getExtractionStatus(taskId) {
-        return this.aiService.getExtractionStatus(taskId);
+        return this.aiService.extractNotes(body.transcript);
     }
 };
 exports.AiController = AiController;
@@ -43,14 +40,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AiController.prototype, "extractNotes", null);
-__decorate([
-    (0, common_1.Get)('extract/:taskId'),
-    (0, roles_decorator_1.Roles)(client_1.Role.DENTIST),
-    __param(0, (0, common_1.Param)('taskId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AiController.prototype, "getExtractionStatus", null);
 exports.AiController = AiController = __decorate([
     (0, common_1.Controller)('ai'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), roles_guard_1.RolesGuard),
