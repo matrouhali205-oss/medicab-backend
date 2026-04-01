@@ -1,0 +1,220 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      Role     @default(PATIENT)
+  phone     String?
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patient           Patient?
+  sentMessages      Message[] @relation("MessageSender")
+  receivedMessages  Message[] @relation("MessageReceiver")
+  createdPrescripts Prescription[]
+  auditLogs         AuditLog[]
+}
+
+enum Role {
+  DENTIST
+  PATIENT
+  ASSISTANT
+  ADMIN
+}
+
+model Patient {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateOfBirth    DateTime?
+  gender         String?
+  bloodType      String?
+  allergies      String?
+  medicalHistory String?  // Text area
+  notes          String?  // Text area
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  appointments Appointment[]
+  teeth        ToothStatus[]
+  records      MedicalRecord[]
+  prescriptions Prescription[]
+}
+
+model Appointment {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  dentistId   String
+  date        DateTime
+  durationMinutes Int
+  type        ApptType @default(FOLLOW_UP)
+  status      ApptStatus @default(SCHEDULED)
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  teleconsult TeleconsultSession?
+}
+
+enum ApptType {
+  NEW_PATIENT
+  FOLLOW_UP
+  EMERGENCY
+  ROUTINE
+}
+
+enum ApptStatus {
+  SCHEDULED
+  CONFIRMED
+  CANCELLED
+  NO_SHOW
+  COMPLETED
+}
+
+model ToothStatus {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  toothNumber Int      // FCI system 11-18, 21-28, 31-38, 41-48
+  status      TStatus  @default(HEALTHY)
+  diagnosis   String?
+  treatment   String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([patientId, toothNumber])
+}
+
+enum TStatus {
+  HEALTHY      // Green
+  CARIES       // Red
+  PLANNED      // Blue
+  WATCH        // Yellow
+  FILLED
+  EXTRACTED
+  CROWN
+  IMPLANT
+}
+
+model MedicalRecord {
+  id          String   @id @default(uuid())
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type        RecordType
+  description String
+  aiSummary   String?
+  date        DateTime @default(now())
+  attachments FileAttachment[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum RecordType {
+  CONSULTATION
+  XRAY
+  SCAN
+  LAB_RESULT
+  CLINICAL_NOTE
+}
+
+model FileAttachment {
+  id              String   @id @default(uuid())
+  medicalRecordId String
+  medicalRecord   MedicalRecord @relation(fields: [medicalRecordId], references: [id], onDelete: Cascade)
+  url             String
+  filename        String
+  mimetype        String
+  size            Int
+  uploadedAt      DateTime @default(now())
+}
+
+model Prescription {
+  id             String   @id @default(uuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  dentistId      String
+  dentist        User     @relation(fields: [dentistId], references: [id])
+  medications    PrescriptionItem[]
+  instructions   String?
+  date           DateTime @default(now())
+  pdfUrl         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model PrescriptionItem {
+  id             String   @id @default(uuid())
+  prescriptionId String
+  prescription   Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  medicationName String
+  dosage         String
+  duration       String
+  frequency      String
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  senderId    String
+  sender      User     @relation("MessageSender", fields: [senderId], references: [id])
+  receiverId  String
+  receiver    User     @relation("MessageReceiver", fields: [receiverId], references: [id])
+  content     String
+  isUrgent    Boolean  @default(false)
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Alert {
+  id          String   @id @default(uuid())
+  userId      String   // Target user
+  title       String
+  description String
+  isRead      Boolean  @default(false)
+  type        AlertType
+  createdAt   DateTime @default(now())
+}
+
+enum AlertType {
+  MISSED_FOLLOWUP
+  CRITICAL_FLAG
+  URGENT_CASE
+  NEW_MESSAGE
+  OVERDUE_APPT
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  action      String
+  resource    String
+  details     String?  // JSON string
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+}
+
+model TeleconsultSession {
+  id            String   @id @default(uuid())
+  appointmentId String   @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  link          String
+  status        String   @default("WAITING") // WAITING, IN_PROGRESS, ENDED
+  startedAt     DateTime?
+  endedAt       DateTime?
+  createdAt     DateTime @default(now())
+}
