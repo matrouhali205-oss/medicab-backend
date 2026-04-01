@@ -1,3 +1,4 @@
+"use strict";
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -7,8 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PatientsService = void 0;
+const common_1 = require("@nestjs/common");
+const prisma_service_1 = require("../prisma/prisma.service");
 let PatientsService = class PatientsService {
     prisma;
     constructor(prisma) {
@@ -40,7 +43,7 @@ let PatientsService = class PatientsService {
         }
         catch (error) {
             if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
-                throw new ConflictException('A user with this email already exists.');
+                throw new common_1.ConflictException('A user with this email already exists.');
             }
             throw error;
         }
@@ -62,7 +65,7 @@ let PatientsService = class PatientsService {
             }
         });
         if (!patient)
-            throw new NotFoundException('Patient not found');
+            throw new common_1.NotFoundException('Patient not found');
         return patient;
     }
     async update(id, updateData) {
@@ -72,9 +75,9 @@ let PatientsService = class PatientsService {
         });
     }
 };
-PatientsService = __decorate([
-    Injectable(),
-    __metadata("design:paramtypes", [PrismaService])
+exports.PatientsService = PatientsService;
+exports.PatientsService = PatientsService = __decorate([
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
 ], PatientsService);
-export { PatientsService };
 //# sourceMappingURL=patients.service.js.map
