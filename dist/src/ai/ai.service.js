@@ -30,7 +30,7 @@ let AiService = class AiService {
     }
     async processAi(taskId, transcript) {
         try {
-            const apiKey = process.env.OPENROUTER_API_KEY || "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";
+            const apiKey = process.env.OPENROUTER_API_KEY;
             const prompt = `You are a strict clinical AI assistant processing dictated voice notes. Analyze this transcript and return ONLY raw JSON. Do not include markdown formatting or conversational text.
 Ensure the JSON has exactly these 4 keys:
 "symptoms": (array of strings, concisely listing reported symptoms),
