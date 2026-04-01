@@ -21,12 +21,13 @@ const prescriptions_module_1 = require("./prescriptions/prescriptions.module");
 const messages_module_1 = require("./messages/messages.module");
 const ai_module_1 = require("./ai/ai.module");
 const teleconsultation_module_1 = require("./teleconsultation/teleconsultation.module");
+const health_module_1 = require("./health/health.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [prisma_module_1.PrismaModule, auth_module_1.AuthModule, users_module_1.UsersModule, patients_module_1.PatientsModule, appointments_module_1.AppointmentsModule, dental_chart_module_1.DentalChartModule, records_module_1.RecordsModule, prescriptions_module_1.PrescriptionsModule, messages_module_1.MessagesModule, ai_module_1.AiModule, teleconsultation_module_1.TeleconsultationModule],
+        imports: [prisma_module_1.PrismaModule, auth_module_1.AuthModule, users_module_1.UsersModule, patients_module_1.PatientsModule, appointments_module_1.AppointmentsModule, dental_chart_module_1.DentalChartModule, records_module_1.RecordsModule, prescriptions_module_1.PrescriptionsModule, messages_module_1.MessagesModule, ai_module_1.AiModule, teleconsultation_module_1.TeleconsultationModule, health_module_1.HealthModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

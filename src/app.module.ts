@@ -12,9 +12,10 @@ import { PrescriptionsModule } from './prescriptions/prescriptions.module';
 import { MessagesModule } from './messages/messages.module';
 import { AiModule } from './ai/ai.module';
 import { TeleconsultationModule } from './teleconsultation/teleconsultation.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [PrismaModule, AuthModule, UsersModule, PatientsModule, AppointmentsModule, DentalChartModule, RecordsModule, PrescriptionsModule, MessagesModule, AiModule, TeleconsultationModule],
+  imports: [PrismaModule, AuthModule, UsersModule, PatientsModule, AppointmentsModule, DentalChartModule, RecordsModule, PrescriptionsModule, MessagesModule, AiModule, TeleconsultationModule, HealthModule],
   controllers: [AppController],
   providers: [AppService],
 })
